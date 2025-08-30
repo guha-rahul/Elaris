@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yellow Lending Demo</title>
+    <style>
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji; padding: 16px; }
+      button { padding: 8px 12px; margin-right: 8px; }
+      pre { background: #f6f8fa; padding: 12px; border-radius: 6px; overflow: auto; }
+      .row { margin-bottom: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Yellow Lending Demo</h1>
+    <div class="row">
+      <button id="btn-ping">Ping</button>
+      <button id="btn-config">Get Config</button>
+      <button id="btn-assets">Get Assets</button>
+      <input id="chainId" placeholder="chainId (optional)" />
+    </div>
+    <h2>Lending (demo)</h2>
+    <div class="row">
+      <button id="btn-l-state">Lending State</button>
+    </div>
+    <div class="row">
+      <input id="symbol" placeholder="symbol e.g. usdc" />
+      <input id="amount" placeholder="amount (wei) e.g. 1000000" />
+      <button id="btn-supply">Supply</button>
+      <button id="btn-borrow">Borrow</button>
+      <button id="btn-repay">Repay</button>
+      <button id="btn-redeem">Redeem</button>
+    </div>
+    <pre id="out">Click a button to call the API…</pre>
+
+    <script>
+      async function call(path) {
+        const res = await fetch('http://localhost:3001' + path);
+        const data = await res.json();
+        document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+      }
+      document.getElementById('btn-ping').onclick = () => call('/api/ping');
+      document.getElementById('btn-config').onclick = () => call('/api/config');
+      document.getElementById('btn-assets').onclick = () => {
+        const chainId = document.getElementById('chainId').value.trim();
+        const q = chainId ? ('?chainId=' + encodeURIComponent(chainId)) : '';
+        call('/api/assets' + q);
+      };
+
+      async function post(path, body) {
+        const res = await fetch('http://localhost:3001' + path, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body || {}),
+        });
+        const data = await res.json();
+        document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+      }
+
+      document.getElementById('btn-l-state').onclick = () => call('/api/lending/state');
+      document.getElementById('btn-supply').onclick = () => {
+        const symbol = document.getElementById('symbol').value.trim();
+        const amount = document.getElementById('amount').value.trim();
+        post('/api/lending/supply', { symbol, amount });
+      };
+      document.getElementById('btn-borrow').onclick = () => {
+        const symbol = document.getElementById('symbol').value.trim();
+        const amount = document.getElementById('amount').value.trim();
+        post('/api/lending/borrow', { symbol, amount });
+      };
+      document.getElementById('btn-repay').onclick = () => {
+        const symbol = document.getElementById('symbol').value.trim();
+        const amount = document.getElementById('amount').value.trim();
+        post('/api/lending/repay', { symbol, amount });
+      };
+      document.getElementById('btn-redeem').onclick = () => {
+        const symbol = document.getElementById('symbol').value.trim();
+        const amount = document.getElementById('amount').value.trim();
+        post('/api/lending/redeem', { symbol, amount });
+      };
+    </script>
+  </body>
+  </html>
+
+

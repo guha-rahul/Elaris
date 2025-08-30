@@ -1,4 +1,22 @@
 {
   "name": "elaris",
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "yarn@4.9.4",
+  "type": "module",
+  "scripts": {
+    "connect": "node src/connect.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "@erc7824/nitrolite": "^0.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "viem": "^2.36.0",
+    "ws": "^8.18.0"
+  },
+  "dependenciesMeta": {
+    "@erc7824/nitrolite@0.3.0": {
+      "unplugged": true
+    }
+  }
 }
